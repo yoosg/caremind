@@ -104,7 +104,6 @@ export default {
   methods: {
     addList() {
       // 새로운 게시물 등록
-      console.log('addList')
       if (this.choice !== null && this.content !== '') {
         this.listAll.push({
           id: this.id,
@@ -122,22 +121,12 @@ export default {
     },
     changeBoard(item) {
       // 새로 작성하는 게시물 게시판 선택
-      console.log(item)
       this.choice = item === '자유 게시판' ? '1' : '2'
-
-      /*
-      - 페이지네이션
-      -
-      */
     },
     choiceFree() {
       // 자유 게시판
       this.pickBoard = '1'
       this.renderList = this.listAll.filter((element) => {
-        console.log(element.choice)
-        console.log(this.pickBoard)
-        console.log(element.choice === this.pickBoard)
-
         return element.choice === this.pickBoard
       })
     },
@@ -150,7 +139,6 @@ export default {
     },
     editComment(id) {
       // 수정 기능
-      console.log(id)
       if (id === this.editTarget) {
         this.editTarget = null
       } else {
@@ -176,7 +164,6 @@ export default {
     },
     remove(id) {
       // 삭제 기능
-      console.log(id)
       this.listAll = this.listAll.filter((element) => element.id !== id)
       this.renderList = this.renderList.filter((element) => element.id !== id)
     }
