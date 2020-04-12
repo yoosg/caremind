@@ -39,18 +39,47 @@
       <div v-if="pickBoard === '0'">
         <ul v-for="item in listAll" :key="item.id">
           <li class="list-item">
-            <div>{{ item.content }}</div>
-            <div>{{ item.date }}</div>
-            <div>{{ item.changeDate }}</div>
+            <div>
+              <div>{{ item.content }}</div>
+              <div>{{ item.date }}</div>
+              <div>{{ item.changeDate }}</div>
+              <div class="tools" v-if="editTarget === item.id">
+                <v-text-field
+                  v-model="editContent"
+                  label="Edit"
+                  outlined
+                ></v-text-field>
+                <v-btn @click="reflection()">수정</v-btn>
+              </div>
+            </div>
+
+            <div class="tools">
+              <v-btn @click="editComment(item.id)">수정</v-btn>
+              <v-btn @click="remove(item.id)">삭제</v-btn>
+            </div>
           </li>
         </ul>
       </div>
       <div v-if="pickBoard === '1' || pickBoard === '2'">
         <ul v-for="item in renderList" :key="item.id">
           <li class="list-item">
-            <div>{{ item.content }}</div>
-            <div>{{ item.date }}</div>
-            <div>{{ item.changeDate }}</div>
+            <div>
+              <div>{{ item.content }}</div>
+              <div>{{ item.date }}</div>
+              <div>{{ item.changeDate }}</div>
+              <div class="tools" v-if="editTarget === item.id">
+                <v-text-field
+                  v-model="editContent"
+                  label="Edit"
+                  outlined
+                ></v-text-field>
+                <v-btn @click="reflection()">수정</v-btn>
+              </div>
+            </div>
+            <div>
+              <v-btn @click="editComment(item.id)">수정</v-btn>
+              <v-btn @click="remove(item.id)">삭제</v-btn>
+            </div>
           </li>
         </ul>
       </div>
@@ -67,11 +96,14 @@ export default {
     choice: null,
     items: ['자유 게시판', '질문 게시판'],
     pickBoard: '0',
+    editTarget: null,
+    editContent: '',
     listAll: Data.list,
     renderList: []
   }),
   methods: {
     addList() {
+      // 새로운 게시물 등록
       console.log('addList')
       if (this.choice !== null && this.content !== '') {
         this.listAll.push({
@@ -82,21 +114,24 @@ export default {
         })
         this.id++
         this.content = ''
+      } else if (this.choice === null) {
+        alert('게시판을 선택해주세요!')
+      } else {
+        alert('게시 할 내용을 적어주세요!')
       }
     },
     changeBoard(item) {
+      // 새로 작성하는 게시물 게시판 선택
       console.log(item)
       this.choice = item === '자유 게시판' ? '1' : '2'
 
       /*
-      - 수정기능
-      - 삭제기능
-      - 게시판 버튼 이벤트
       - 페이지네이션
       -
       */
     },
     choiceFree() {
+      // 자유 게시판
       this.pickBoard = '1'
       this.renderList = this.listAll.filter((element) => {
         console.log(element.choice)
@@ -107,10 +142,43 @@ export default {
       })
     },
     choiceQuestion() {
+      // 질문 게시판
       this.pickBoard = '2'
       this.renderList = this.listAll.filter(
         (element) => element.choice === this.pickBoard
       )
+    },
+    editComment(id) {
+      // 수정 기능
+      console.log(id)
+      if (id === this.editTarget) {
+        this.editTarget = null
+      } else {
+        this.editTarget = id
+      }
+    },
+    reflection() {
+      // 수정 반영
+      if (this.editContent !== '') {
+        this.listAll.map((element) => {
+          if (element.id === this.editTarget) {
+            element.content = this.editContent
+            return element
+          } else {
+            return element
+          }
+        })
+        this.editContent = ''
+        this.editTarget = null
+      } else {
+        alert('수정 할 내용을 입력해주세요!')
+      }
+    },
+    remove(id) {
+      // 삭제 기능
+      console.log(id)
+      this.listAll = this.listAll.filter((element) => element.id !== id)
+      this.renderList = this.renderList.filter((element) => element.id !== id)
     }
   }
 }
@@ -133,5 +201,10 @@ export default {
 }
 .list-item {
   margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+.tools {
+  display: flex;
 }
 </style>
