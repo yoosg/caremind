@@ -4,7 +4,12 @@
       <v-flex>
         <v-text-field v-model="content" label="content" outlined></v-text-field>
         <div class="select-area">
-          <v-select :items="items" label="게시판 선택" outlined></v-select>
+          <v-select
+            :items="items"
+            label="게시판 선택"
+            outlined
+            @change="changeBoard"
+          ></v-select>
         </div>
       </v-flex>
       <v-flex>
@@ -12,18 +17,43 @@
       </v-flex>
     </v-container>
     <v-container class="list-area">
-      <div class="button-group">
-        <v-btn @click="addList">전체게시판</v-btn>
-        <v-btn @click="addList">자유게시판</v-btn>
-        <v-btn @click="addList">질문게시판</v-btn>
+      <v-btn-toggle
+        class="button-group"
+        v-model="pickBoard"
+        tile
+        color="deep-purple accent-3"
+        group
+      >
+        <v-btn value="0">
+          전체 게시판
+        </v-btn>
+
+        <v-btn value="1" @click="choiceFree">
+          자유 게시판
+        </v-btn>
+
+        <v-btn value="2" @click="choiceQuestion">
+          질문 게시판
+        </v-btn>
+      </v-btn-toggle>
+      <div v-if="pickBoard === '0'">
+        <ul v-for="item in listAll" :key="item.id">
+          <li class="list-item">
+            <div>{{ item.content }}</div>
+            <div>{{ item.date }}</div>
+            <div>{{ item.changeDate }}</div>
+          </li>
+        </ul>
       </div>
-      <ul v-for="item in listAll" :key="item.id">
-        <li class="list-item">
-          <div>{{ item.content }}</div>
-          <div>{{ item.date }}</div>
-          <div>{{ item.changeDate }}</div>
-        </li>
-      </ul>
+      <div v-if="pickBoard === '1' || pickBoard === '2'">
+        <ul v-for="item in renderList" :key="item.id">
+          <li class="list-item">
+            <div>{{ item.content }}</div>
+            <div>{{ item.date }}</div>
+            <div>{{ item.changeDate }}</div>
+          </li>
+        </ul>
+      </div>
     </v-container>
   </v-layout>
 </template>
@@ -32,17 +62,55 @@
 import Data from './data'
 export default {
   data: () => ({
-    addItem: { id: 2, content: 'asdfasdf', date: Data.date, choice: 0 },
     id: 2,
     content: '',
-    addDate: Data.date,
+    choice: null,
     items: ['자유 게시판', '질문 게시판'],
-    listAll: Data.list
+    pickBoard: '0',
+    listAll: Data.list,
+    renderList: []
   }),
   methods: {
     addList() {
       console.log('addList')
-      this.listAll.push(this.addItem)
+      if (this.choice !== null && this.content !== '') {
+        this.listAll.push({
+          id: this.id,
+          content: this.content,
+          date: Data.date,
+          choice: this.choice
+        })
+        this.id++
+        this.content = ''
+      }
+    },
+    changeBoard(item) {
+      console.log(item)
+      this.choice = item === '자유 게시판' ? '1' : '2'
+
+      /*
+      - 수정기능
+      - 삭제기능
+      - 게시판 버튼 이벤트
+      - 페이지네이션
+      -
+      */
+    },
+    choiceFree() {
+      this.pickBoard = '1'
+      this.renderList = this.listAll.filter((element) => {
+        console.log(element.choice)
+        console.log(this.pickBoard)
+        console.log(element.choice === this.pickBoard)
+
+        return element.choice === this.pickBoard
+      })
+    },
+    choiceQuestion() {
+      this.pickBoard = '2'
+      this.renderList = this.listAll.filter(
+        (element) => element.choice === this.pickBoard
+      )
     }
   }
 }

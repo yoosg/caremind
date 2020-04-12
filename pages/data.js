@@ -12,13 +12,13 @@ const data = {
       id: 0,
       content: '좋은 질문입니다~~!!',
       date: addDate,
-      choice: 1
+      choice: '2'
     },
     {
       id: 1,
       content: '좋은 글입니다!!!!',
       date: addDate,
-      choice: 0
+      choice: '1'
     }
   ]
 }
