@@ -218,31 +218,31 @@ export default {
       return (this.pageNum - 1) * this.listPerPage
     },
     endIndex() {
-      // 전체게시판 끝 인덱스
+      // 전체 게시판 끝 인덱스
       return this.startIndex + this.listPerPage
     },
     numOfPages() {
-      // 전체게시판 끝페이지
+      // 전체 게시판 끝페이지
       return Math.ceil(this.listAll.length / this.listPerPage)
     },
     pageData() {
-      // 전체게시판 페이지네이션 데이터
+      // 전체 게시판 페이지네이션 데이터
       return this.listAll.slice(this.startIndex, this.endIndex)
     },
     firstIndex() {
-      // 사이드게시판 시작 인덱스
+      // 사이드 게시판 시작 인덱스
       return (this.sidePageNum - 1) * this.listPerPage
     },
     lastIndex() {
-      // 사이드게시판 끝 인덱스
+      // 사이드 게시판 끝 인덱스
       return this.firstIndex + this.listPerPage
     },
     numOfSidePages() {
-      // 사이드게시판 끝페이지
+      // 사이드 게시판 끝페이지
       return Math.ceil(this.renderList.length / this.listPerPage)
     },
     sidePageData() {
-      // 사이드게시판 페이지네이션 데이터
+      // 사이드 게시판 페이지네이션 데이터
       return this.renderList.slice(this.firstIndex, this.lastIndex)
     }
   }
